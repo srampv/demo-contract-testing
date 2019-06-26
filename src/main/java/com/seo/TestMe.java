@@ -1,9 +1,9 @@
-package com.example;
+package com.seo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -21,204 +21,6 @@ public class TestMe {
         System.out.println(r.getMoves("d4"));
         System.out.println(b.getMoves("d4"));
         System.out.println(q.getMoves("d4"));
-    }
-
-    static class ChessUtil {
-        public static int getIntValue(String c) {
-            switch (c) {
-                case "a":
-                    return 1;
-                case "b":
-                    return 2;
-                case "c":
-                    return 3;
-                case "d":
-                    return 4;
-                case "e":
-                    return 5;
-                case "f":
-                    return 6;
-                case "g":
-                    return 7;
-                case "h":
-                    return 8;
-            }
-            return -1;
-        }
-
-        public static String getCharValue(int c) {
-            switch (c) {
-                case 1:
-                    return "a";
-                case 2:
-                    return "b";
-                case 3:
-                    return "c";
-                case 4:
-                    return "d";
-                case 5:
-                    return "e";
-                case 6:
-                    return "f";
-                case 7:
-                    return "g";
-                case 8:
-                    return "h";
-            }
-            return "";
-        }
-    }
-
-    private static class Knight {
-
-
-        public List<String> getMoves(String position) {
-            List<String> moves = new ArrayList<>();
-            char c[] = position.toLowerCase().toCharArray();
-            int val1 = ChessUtil.getIntValue(c[0] + "".trim());
-            int val2 = Integer.parseInt(c[1] + "".trim());
-            System.out.println("MOVE1:-->" + ChessUtil.getCharValue(val1 + 1) + (val2 + 2) + "".trim());
-            System.out.println("MOVE2:-->" + ChessUtil.getCharValue(val1 - 1) + (val2 + 2) + "".trim());
-            System.out.println("MOVE3:-->" + ChessUtil.getCharValue(val1 + 1) + (val2 - 2) + "".trim());
-            System.out.println("MOVE4:-->" + ChessUtil.getCharValue(val1 - 1) + (val2 - 2) + "".trim());
-
-            System.out.println("MOVE5:-->" + ChessUtil.getCharValue(val1 + 2) + (val2 + 1) + "".trim());
-            System.out.println("MOVE6:-->" + ChessUtil.getCharValue(val1 - 2) + (val2 + 1) + "".trim());
-            System.out.println("MOVE7:-->" + ChessUtil.getCharValue(val1 + 2) + (val2 - 1) + "".trim());
-            System.out.println("MOVE8:-->" + ChessUtil.getCharValue(val1 - 2) + (val2 - 1) + "".trim());
-
-            moves.add(ChessUtil.getCharValue(val1 + 1) + (val2 + 2));
-            moves.add(ChessUtil.getCharValue(val1 - 1) + (val2 + 2));
-            moves.add(ChessUtil.getCharValue(val1 + 1) + (val2 - 2));
-            moves.add(ChessUtil.getCharValue(val1 - 1) + (val2 - 2));
-
-            moves.add(ChessUtil.getCharValue(val1 + 2) + (val2 + 1));
-            moves.add(ChessUtil.getCharValue(val1 - 2) + (val2 + 1));
-            moves.add(ChessUtil.getCharValue(val1 + 2) + (val2 - 1));
-            moves.add(ChessUtil.getCharValue(val1 - 2) + (val2 - 1));
-            moves.add(position);
-
-            return moves.stream().filter(p -> p.trim().length() == 2 && !p.contains("0") && !p.contains("-1") && !p.contains("9")).collect(Collectors.toList());
-        }
-
-
-    }
-
-    private static class Bishop {
-
-
-        public Set<String> getMoves(String position) {
-            List<String> moves = new ArrayList<>();
-            char c[] = position.toLowerCase().toCharArray();
-            int val1 = ChessUtil.getIntValue(c[0] + "".trim());
-            int val2 = Integer.parseInt(c[1] + "".trim());
-            for (int i = 1; i < val1; i++, val2++) {
-                System.out.println("MOVE:-->" + ChessUtil.getCharValue(i) + (val2) + "".trim());
-                moves.add(ChessUtil.getCharValue(i) + (val2) + "".trim());
-            }
-            for (int i = val1; i <= 8; i++, val2++) {
-                System.out.println("MOVE:-->" + ChessUtil.getCharValue(i) + (val2) + "".trim());
-                moves.add(ChessUtil.getCharValue(i) + (val2) + "".trim());
-            }
-
-            for (int i = 1; i < val2; i++, val2--) {
-                System.out.println("MOVE:-->" + ChessUtil.getCharValue(i) + (val2) + "".trim());
-                moves.add(ChessUtil.getCharValue(i) + (val2) + "".trim());
-            }
-            for (int i = val2; i <= 8; i++, val2--) {
-                System.out.println("MOVE:-->" + ChessUtil.getCharValue(i) + (val2) + "".trim());
-                moves.add(ChessUtil.getCharValue(i) + (val2) + "".trim());
-            }
-
-
-            return moves.stream().filter(p -> p.trim().length() == 2 && !p.contains("0") && !p.contains("-1") && !p.contains("9")).collect(Collectors.toSet());
-        }
-
-
-    }
-
-    private static class Queen {
-
-
-        public Set<String> getMoves(String position) {
-            List<String> moves = new ArrayList<>();
-            char c[] = position.toLowerCase().toCharArray();
-            int val1 = ChessUtil.getIntValue(c[0] + "".trim());
-            int val2 = Integer.parseInt(c[1] + "".trim());
-            for (int i = 1; i < val1; i++, val2++) {
-                System.out.println("MOVE:-->" + ChessUtil.getCharValue(i) + (val2) + "".trim());
-                moves.add(ChessUtil.getCharValue(i) + (val2) + "".trim());
-            }
-            for (int i = val1; i <= 8; i++, val2++) {
-                System.out.println("MOVE:-->" + ChessUtil.getCharValue(i) + (val2) + "".trim());
-                moves.add(ChessUtil.getCharValue(i) + (val2) + "".trim());
-            }
-
-            for (int i = 1; i < val2; i++, val2--) {
-                System.out.println("MOVE:-->" + ChessUtil.getCharValue(i) + (val2) + "".trim());
-                moves.add(ChessUtil.getCharValue(i) + (val2) + "".trim());
-            }
-            for (int i = val2; i <= 8; i++, val2--) {
-                System.out.println("MOVE:-->" + ChessUtil.getCharValue(i) + (val2) + "".trim());
-                moves.add(ChessUtil.getCharValue(i) + (val2) + "".trim());
-            }
-
-            for (int i = 1; i < val1; i++) {
-                System.out.println("MOVE:-->" + ChessUtil.getCharValue(i) + (val2) + "".trim());
-                moves.add(ChessUtil.getCharValue(i) + (val2) + "".trim());
-            }
-            for (int i = val1; i <= 8; i++) {
-                System.out.println("MOVE:-->" + ChessUtil.getCharValue(i) + (val2) + "".trim());
-                moves.add(ChessUtil.getCharValue(i) + (val2) + "".trim());
-            }
-
-            for (int i = 1; i < val2; i++) {
-                System.out.println("MOVE:-->" + ChessUtil.getCharValue(val1) + (i) + "".trim());
-                moves.add(ChessUtil.getCharValue(val1) + (i) + "".trim());
-            }
-            for (int i = val2; i <= 8; i++) {
-                System.out.println("MOVE:-->" + ChessUtil.getCharValue(val1) + (i) + "".trim());
-                moves.add(ChessUtil.getCharValue(val1) + (i) + "".trim());
-            }
-
-
-            return moves.stream().filter(p -> p.trim().length() == 2 && !p.contains("0") && !p.contains("-1") && !p.contains("9")).collect(Collectors.toSet());
-        }
-
-
-    }
-
-    private static class Rook {
-
-
-        public Set<String> getMoves(String position) {
-            List<String> moves = new ArrayList<>();
-            char c[] = position.toLowerCase().toCharArray();
-            int val1 = ChessUtil.getIntValue(c[0] + "".trim());
-            int val2 = Integer.parseInt(c[1] + "".trim());
-            for (int i = 1; i < val1; i++) {
-                System.out.println("MOVE:-->" + ChessUtil.getCharValue(i) + (val2) + "".trim());
-                moves.add(ChessUtil.getCharValue(i) + (val2) + "".trim());
-            }
-            for (int i = val1; i <= 8; i++) {
-                System.out.println("MOVE:-->" + ChessUtil.getCharValue(i) + (val2) + "".trim());
-                moves.add(ChessUtil.getCharValue(i) + (val2) + "".trim());
-            }
-
-            for (int i = 1; i < val2; i++) {
-                System.out.println("MOVE:-->" + ChessUtil.getCharValue(val1) + (i) + "".trim());
-                moves.add(ChessUtil.getCharValue(val1) + (i) + "".trim());
-            }
-            for (int i = val2; i <= 8; i++) {
-                System.out.println("MOVE:-->" + ChessUtil.getCharValue(val1) + (i) + "".trim());
-                moves.add(ChessUtil.getCharValue(val1) + (i) + "".trim());
-            }
-
-
-            return moves.stream().filter(p -> p.trim().length() == 2 && !p.contains("0") && !p.contains("-1") && !p.contains("9")).collect(Collectors.toSet());
-        }
-
-
     }
 
     private static void permute(String str, int l, int r) {
@@ -256,6 +58,7 @@ public class TestMe {
         Integer votes[] = {1, 2, 3, 3, 5, 5, 4, 6, 1, 1, 8, 8, 4, 4, 4};
         int votersMoney[] = {11, 22, 32, 32, 52, 52, 42, 62, 12, 12, 82, 82, 42, 42, 42};
         int houseRates[] = {100, 200, 400, 300, 200, 500, 700, 800, 900, 1000, 200, 300, 400};
+        Arrays.asList(votes).stream().forEachOrdered(c -> System.out.println(c));
         List<Employee> list = new ArrayList<>();
         List<BlogPost> listBlogs = new ArrayList<>();
         listBlogs.add(new BlogPost("test", "Venkata", BlogPostType.GUIDE, 12));
