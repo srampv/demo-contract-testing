@@ -93,9 +93,18 @@ public class ChessFrame extends JFrame implements ActionListener, ChangeListener
             for (int j = 0; j < blocks.length; j++) {
                 if (blocks[i][j].getColor().name().equalsIgnoreCase("BLACK")) {
                     g.setColor(Color.BLACK);
-                } else {
+                } else if (blocks[i][j].getColor().name().equalsIgnoreCase("WHITE")) {
                     g.setColor(Color.WHITE);
+                } else if (blocks[i][j].getColor().name().equalsIgnoreCase("RED")) {
+                    g.setColor(Color.RED);
+                } else if (blocks[i][j].getColor().name().equalsIgnoreCase("GREEN")) {
+                    g.setColor(Color.GREEN);
+                } else if (blocks[i][j].getColor().name().equalsIgnoreCase("BLUE")) {
+                    g.setColor(Color.BLUE);
+                } else {
+                    g.setColor(Color.GRAY);
                 }
+
                 g.fillRect(blocks[i][j].getUpperLeft().getX(), blocks[i][j].getUpperLeft().getY(), 100, 100);
             }
         }
@@ -109,24 +118,7 @@ public class ChessFrame extends JFrame implements ActionListener, ChangeListener
         Path p = Paths.get("C:\\users\\VenkPi\\chess.properties");
         p.getFileSystem().getFileStores().forEach(c -> System.out.println(c));
         try {
-//            readAllLines(p).stream().forEach(c -> {
-            for (int i = 0; i < blocks.length; i++) {
-                Arrays.asList(blocks[i]).stream().filter(block -> {
-                    return e.getX() >= block.getUpperLeft().getX() && e.getY() >= block.getUpperLeft().getY() && e.getX() <= block.getLowerRight().getX() && e.getY() <= block.getLowerRight().getY();
-                }).findFirst().ifPresent(c -> {
-                    System.out.println("GOTCHA:---->" + c.getLowerRight());
-                });
-            }
-
-            int ROW = Integer.parseInt("4:7".split("\\:")[0]);
-            int COL = Integer.parseInt("4:7".split("\\:")[1]);
-            Block b = getBlock("4:7");
-            b.setType(TYPE.BISHOP);
-            Bishop bishop = new Bishop();
-            bishop.getMoves(ChessUtil.getCharValue(ROW) + COL).stream().forEach(move -> System.out.println(move));
-            blocks[ROW - 1][COL - 1] = b;
-            System.out.printf(new com.seo.Dimension(ROW, COL) + ":---->%s %s %s %s", b.getUpperLeft(), b.getUpperRight(), b.getLowerLeft(), b.getLowerRight());
-//            });
+            findBlock(e.getX(), e.getY());
         } catch (Exception e1) {
             e1.printStackTrace();
         } finally {
@@ -135,14 +127,57 @@ public class ChessFrame extends JFrame implements ActionListener, ChangeListener
 
     }
 
+    private Block findBlock(int clickedLocationX, int clickedLocationY) {
+        final Block[] returBlock = new Block[1];
+        for (int i = 0; i < blocks.length; i++) {
+            Arrays.asList(blocks[i]).stream().filter(block -> {
+                return block.isValidCoOrdinates(clickedLocationX, clickedLocationY);
+            }).findFirst().ifPresent(c -> {
+                System.out.println("GOTCHA:---->" + c.getLowerRight());
+                for (int k = 0; k < blocks.length; k++) {
+                    for (int l = 0; l < blocks.length; l++) {
+                        if (blocks[k][l].getLowerRight().getX() == c.getLowerRight().getX() && blocks[k][l].getLowerRight().getY() == c.getLowerRight().getY()) {
+                            System.out.println("K:L:--->" + (k + 1) + ":" + (l + 1));
+                            Block b = getBlock((k + 1) + ":" + (l + 1));
+                            b.setType(TYPE.BISHOP);
+                            Bishop bishop = new Bishop();
+                            bishop.getMoves(ChessUtil.getCharValue(k + 1) + (l + 1)).stream().forEach(move -> {
+                                System.out.println("BISHOP MOVES:---->" + move);
+                                int val1 = ChessUtil.getIntValue(move.toCharArray()[0] + "".trim()) - 1;
+                                int val2 = (Integer.parseInt(move.toCharArray()[1] + "".trim()) - 1);
+                                Block tempBlock = getBlock(val1 + ":" + val2);
+                                tempBlock.setColor(COLOR.RED);
+                                blocks[val1 - 1][val2 - 1] = tempBlock;
+                            });
+                            blocks[k][l] = b;
+                            System.out.printf(new com.seo.Dimension((k + 1), (l + 1)) + ":---->%s %s %s %s", b.getUpperLeft(), b.getUpperRight(), b.getLowerLeft(), b.getLowerRight());
+                            returBlock[0] = b;
+                        }
+                    }
+                }
+            });
+        }
+        return returBlock[0];
+
+    }
+
+    /**
+     * This method always expects index from 1 not 0
+     *
+     * @param c
+     * @return
+     */
     private static Block getBlock(String c) {
         int ROW = Integer.parseInt(c.split("\\:")[0]);
         int COL = Integer.parseInt(c.split("\\:")[1]);
         System.out.println("ROW:COL:---->" + ROW + ":" + COL);
-        ROW = ROW >= 9 ? 8 : ROW;
-        COL = COL >= 9 ? 8 : COL;
-        ROW = ROW <= 0 ? 1 : ROW;
-        COL = COL <= 0 ? 1 : COL;
+        ROW = ROW >= 9 ? -1 : ROW;
+        COL = COL >= 9 ? -1 : COL;
+        ROW = ROW <= 0 ? -1 : ROW;
+        COL = COL <= 0 ? -1 : COL;
+        if (ROW == -1 || COL == -1) {
+            return new Block(0, 0, 0, 0, TYPE.NONE, COLOR.WHITE);
+        }
         Block b = new Block((COL) * 100, (10 - ROW - 1) * 100, (COL + 1) * 100, (10 - ROW) * 100, TYPE.NONE, COLOR.WHITE);
         if (ROW % 2 == 1) {
             if (COL % 2 == 1) {

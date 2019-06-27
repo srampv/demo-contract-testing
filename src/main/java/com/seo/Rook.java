@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class Rook {
+public class Rook implements Piece {
 
 
     public Set<String> getMoves(String position) {

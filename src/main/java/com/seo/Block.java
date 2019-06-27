@@ -7,6 +7,35 @@ public class Block {
     private int y2;
     private TYPE type;
     private COLOR color;
+    private Piece piece;
+
+    public Piece getPiece() {
+        switch (getType()) {
+            case BISHOP:
+                piece = new Bishop();
+                break;
+            case KNIGHT:
+                piece = new Knight();
+                break;
+            case ROOK:
+                piece = new Rook();
+                break;
+            case QUEEN:
+                piece = new Queen();
+                break;
+            case KING:
+                piece = new King();
+                break;
+            case PAWN:
+                piece = new Pawn();
+                break;
+        }
+        return piece;
+    }
+
+    public void setPiece(Piece piece) {
+        this.piece = piece;
+    }
 
     public Block(int x1, int y1, int x2, int y2, TYPE type, COLOR color) {
         this.x1 = x1;
@@ -77,8 +106,13 @@ public class Block {
         return type;
     }
 
+
     public void setType(TYPE type) {
         this.type = type;
+    }
+
+    public boolean isValidCoOrdinates(int x, int y) {
+        return x >= this.getX1() && y >= this.getY1() && x <= this.getX2() && y <= this.getY2();
     }
 }
 
@@ -87,7 +121,7 @@ enum TYPE {
 }
 
 enum COLOR {
-    BLACK, WHITE;
+    BLACK, WHITE, RED, GREEN, BLUE;
 }
 
 class Dimension {
@@ -119,4 +153,5 @@ class Dimension {
     public String toString() {
         return "[" + x + "," + y + "]";
     }
+
 }
