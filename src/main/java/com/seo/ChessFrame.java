@@ -6,11 +6,9 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.Dimension;
 import java.awt.event.*;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import static java.nio.file.Files.readAllLines;
+import java.util.Arrays;
 
 public class ChessFrame extends JFrame implements ActionListener, ChangeListener, MouseListener, WindowListener, MouseMotionListener {
     private static Block blocks[][] = new Block[8][8];
@@ -111,15 +109,25 @@ public class ChessFrame extends JFrame implements ActionListener, ChangeListener
         Path p = Paths.get("C:\\users\\VenkPi\\chess.properties");
         p.getFileSystem().getFileStores().forEach(c -> System.out.println(c));
         try {
-            readAllLines(p).stream().forEach(c -> {
-                int ROW = Integer.parseInt(c.split("\\:")[0]);
-                int COL = Integer.parseInt(c.split("\\:")[1]);
-                Block b = getBlock(c);
-                b.setType(TYPE.BISHOP);
-                blocks[ROW - 1][COL - 1] = b;
-                System.out.printf(new com.seo.Dimension(ROW, COL) + ":---->%s %s %s %s", b.getUpperLeft(), b.getUpperRight(), b.getLowerLeft(), b.getLowerRight());
-            });
-        } catch (IOException e1) {
+//            readAllLines(p).stream().forEach(c -> {
+            for (int i = 0; i < blocks.length; i++) {
+                Arrays.asList(blocks[i]).stream().filter(block -> {
+                    return e.getX() >= block.getUpperLeft().getX() && e.getY() >= block.getUpperLeft().getY() && e.getX() <= block.getLowerRight().getX() && e.getY() <= block.getLowerRight().getY();
+                }).findFirst().ifPresent(c -> {
+                    System.out.println("GOTCHA:---->" + c.getLowerRight());
+                });
+            }
+
+            int ROW = Integer.parseInt("4:7".split("\\:")[0]);
+            int COL = Integer.parseInt("4:7".split("\\:")[1]);
+            Block b = getBlock("4:7");
+            b.setType(TYPE.BISHOP);
+            Bishop bishop = new Bishop();
+            bishop.getMoves(ChessUtil.getCharValue(ROW) + COL).stream().forEach(move -> System.out.println(move));
+            blocks[ROW - 1][COL - 1] = b;
+            System.out.printf(new com.seo.Dimension(ROW, COL) + ":---->%s %s %s %s", b.getUpperLeft(), b.getUpperRight(), b.getLowerLeft(), b.getLowerRight());
+//            });
+        } catch (Exception e1) {
             e1.printStackTrace();
         } finally {
             repaint();
